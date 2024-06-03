@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:login_register_page/signuppage.dart';
 
+import 'loginpage.dart';
+
 class First_Page extends StatefulWidget {
   @override
   State<StatefulWidget> createState() {
@@ -19,8 +21,19 @@ class State_First_Page extends State<First_Page> {
                 image: AssetImage('asset/images/Firstpage BG.jpg'),
                 fit: BoxFit.cover)),
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.end,
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
+            Container(
+              height: 150,
+              width: 150,
+              decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  image: DecorationImage(
+                      image: AssetImage('asset/images/Firstpage icon.jpg'))),
+            ),
+            SizedBox(
+              height: 50,
+            ),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
@@ -33,7 +46,13 @@ class State_First_Page extends State<First_Page> {
                       borderRadius: BorderRadius.circular(20),
                       border: Border.all(color: Colors.black, width: 2)),
                   child: TextButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      Navigator.push(context, MaterialPageRoute(
+                        builder: (context) {
+                          return Login_Page();
+                        },
+                      ));
+                    },
                     child: Text(
                       'Log in',
                       style: TextStyle(

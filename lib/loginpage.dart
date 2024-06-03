@@ -1,22 +1,19 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:login_register_page/signuppage.dart';
 
-class Signup_Page extends StatefulWidget {
+class Login_Page extends StatefulWidget {
   @override
   State<StatefulWidget> createState() {
-    return State_Signup_Page();
+    return State_Login_Page();
   }
 }
 
-class State_Signup_Page extends State<Signup_Page> {
-  TextEditingController nameController = TextEditingController();
-  TextEditingController emailController = TextEditingController();
-  TextEditingController mobilenoController = TextEditingController();
-  TextEditingController passwordController = TextEditingController();
-  TextEditingController reenterPasswordController = TextEditingController();
-
+class State_Login_Page extends State<Login_Page> {
   @override
   Widget build(BuildContext context) {
+    TextEditingController emailController = TextEditingController();
+    TextEditingController passwordController = TextEditingController();
+
     return Scaffold(
       body: Container(
           decoration: BoxDecoration(
@@ -32,28 +29,19 @@ class State_Signup_Page extends State<Signup_Page> {
                     children: [
                       Container(
                         // margin: EdgeInsets.fromLTRB(left, top, right, bottom),
-                        margin: EdgeInsets.fromLTRB(0, 45, 0, 65),
+                        margin: EdgeInsets.fromLTRB(0, 45, 0, 190),
                         child: Text(
-                          'Sign Up',
+                          'Login',
                           style: TextStyle(
                               fontSize: 40,
                               color: Colors.black,
                               fontFamily: 'fontsfamily'),
                         ),
                       ),
-                      TextFiledWidget(Icons.person, nameController, 'Name',
-                          TextInputType.name),
                       TextFiledWidget(Icons.email, emailController, 'Email',
                           TextInputType.emailAddress),
-                      TextFiledWidget(Icons.call, mobilenoController,
-                          'Mobile Number', TextInputType.number),
                       TextFiledWidget(Icons.password, passwordController,
                           'Password', TextInputType.name),
-                      TextFiledWidget(
-                          Icons.remove_red_eye_outlined,
-                          reenterPasswordController,
-                          'Re-enter Password',
-                          TextInputType.name),
                       Container(
                         // padding: EdgeInsets.fromLTRB(left, top, right, bottom),
                         padding: EdgeInsets.fromLTRB(175, 0, 5, 0),
@@ -79,7 +67,7 @@ class State_Signup_Page extends State<Signup_Page> {
                           child: TextButton(
                             onPressed: () {},
                             child: Text(
-                              'Sign up',
+                              'Log in',
                               style: TextStyle(
                                   color: Colors.grey,
                                   fontSize: 25,
@@ -98,9 +86,9 @@ class State_Signup_Page extends State<Signup_Page> {
                             ),
                           ),
                           Container(
-                            margin: EdgeInsets.all(10),
+                            margin: EdgeInsets.all(15),
                             child: Text(
-                              'Or Sign Up With',
+                              'Or Login With',
                               style: TextStyle(
                                   fontFamily: 'fontsfamily',
                                   color: Colors.grey),
@@ -181,6 +169,34 @@ class State_Signup_Page extends State<Signup_Page> {
                               ),
                             ),
                           ),
+                        ],
+                      ),
+                      SizedBox(
+                        height: 20,
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            'Not registered ?',
+                            style: TextStyle(
+                                color: Colors.grey, fontFamily: 'fontsfamily'),
+                          ),
+                          TextButton(
+                              onPressed: () {
+                                Navigator.pushReplacement(context,
+                                    MaterialPageRoute(
+                                  builder: (context) {
+                                    return Signup_Page();
+                                  },
+                                ));
+                              },
+                              child: Text(
+                                'Sign up now',
+                                style: TextStyle(
+                                    color: Colors.white,
+                                    fontFamily: 'fontsfamily'),
+                              ))
                         ],
                       )
                     ],
