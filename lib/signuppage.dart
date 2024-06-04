@@ -1,7 +1,14 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:login_register_page/welcomepage.dart';
 
 class Signup_Page extends StatefulWidget {
+  String name = "";
+  String email = "";
+  int mobile = 0;
+  String password = "";
+  String reenter = "";
+
   @override
   State<StatefulWidget> createState() {
     return State_Signup_Page();
@@ -32,7 +39,7 @@ class State_Signup_Page extends State<Signup_Page> {
                     children: [
                       Container(
                         // margin: EdgeInsets.fromLTRB(left, top, right, bottom),
-                        margin: EdgeInsets.fromLTRB(0, 45, 0, 65),
+                        margin: EdgeInsets.fromLTRB(0, 45, 0, 50),
                         child: Text(
                           'Sign Up',
                           style: TextStyle(
@@ -56,18 +63,20 @@ class State_Signup_Page extends State<Signup_Page> {
                           TextInputType.name),
                       Container(
                         // padding: EdgeInsets.fromLTRB(left, top, right, bottom),
-                        padding: EdgeInsets.fromLTRB(175, 0, 5, 0),
+                        padding: EdgeInsets.fromLTRB(217, 0, 0, 0),
                         child: TextButton(
                             onPressed: () {},
                             child: Text(
                               'Forget Password ?',
                               style: TextStyle(
                                   fontFamily: 'fontsfamily',
-                                  fontSize: 20,
+                                  fontSize: 15,
                                   color: Colors.red),
                             )),
                       ),
                       Container(
+                        // margin: EdgeInsets.fromLTRB(left, top, right, bottom),
+                        margin: EdgeInsets.fromLTRB(0, 10, 0, 8),
                         height: 60,
                         width: 180,
                         child: Card(
@@ -77,7 +86,9 @@ class State_Signup_Page extends State<Signup_Page> {
                           shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(20)),
                           child: TextButton(
-                            onPressed: () {},
+                            onPressed: () {
+                              signupFun();
+                            },
                             child: Text(
                               'Sign up',
                               style: TextStyle(
@@ -98,7 +109,8 @@ class State_Signup_Page extends State<Signup_Page> {
                             ),
                           ),
                           Container(
-                            margin: EdgeInsets.all(10),
+                            // margin: EdgeInsets.fromLTRB(left, top, right, bottom),
+                            margin: EdgeInsets.fromLTRB(10, 15, 10, 18),
                             child: Text(
                               'Or Sign Up With',
                               style: TextStyle(
@@ -196,6 +208,7 @@ class State_Signup_Page extends State<Signup_Page> {
       String s, TextInputType textInputType) {
     return Container(
       margin: EdgeInsets.all(10),
+      height: 60,
       child: Card(
         shadowColor: Colors.white,
         elevation: 2,
@@ -215,5 +228,23 @@ class State_Signup_Page extends State<Signup_Page> {
         ),
       ),
     );
+  }
+
+  void signupFun() {
+    widget.name = nameController.text;
+    widget.email = emailController.text;
+    widget.mobile = int.parse(mobilenoController.text);
+    widget.password = passwordController.text;
+    widget.reenter = reenterPasswordController.text;
+
+
+
+    Navigator.push(context, MaterialPageRoute(
+      builder: (context) {
+        return Welcome_Page();
+      },
+    ));
+
+
   }
 }

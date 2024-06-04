@@ -29,7 +29,7 @@ class State_Login_Page extends State<Login_Page> {
                     children: [
                       Container(
                         // margin: EdgeInsets.fromLTRB(left, top, right, bottom),
-                        margin: EdgeInsets.fromLTRB(0, 45, 0, 190),
+                        margin: EdgeInsets.fromLTRB(0, 120, 0, 90),
                         child: Text(
                           'Login',
                           style: TextStyle(
@@ -44,18 +44,19 @@ class State_Login_Page extends State<Login_Page> {
                           'Password', TextInputType.name),
                       Container(
                         // padding: EdgeInsets.fromLTRB(left, top, right, bottom),
-                        padding: EdgeInsets.fromLTRB(175, 0, 5, 0),
+                        padding: EdgeInsets.fromLTRB(217, 0, 0, 0),
                         child: TextButton(
                             onPressed: () {},
                             child: Text(
                               'Forget Password ?',
                               style: TextStyle(
                                   fontFamily: 'fontsfamily',
-                                  fontSize: 20,
+                                  fontSize: 15,
                                   color: Colors.red),
                             )),
                       ),
                       Container(
+                        margin: EdgeInsets.fromLTRB(0, 10, 0, 8),
                         height: 60,
                         width: 180,
                         child: Card(
@@ -86,7 +87,7 @@ class State_Login_Page extends State<Login_Page> {
                             ),
                           ),
                           Container(
-                            margin: EdgeInsets.all(15),
+                            margin: EdgeInsets.fromLTRB(10, 17, 10, 19),
                             child: Text(
                               'Or Login With',
                               style: TextStyle(
@@ -172,7 +173,7 @@ class State_Login_Page extends State<Login_Page> {
                         ],
                       ),
                       SizedBox(
-                        height: 20,
+                        height: 17,
                       ),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
@@ -212,6 +213,7 @@ class State_Login_Page extends State<Login_Page> {
       String s, TextInputType textInputType) {
     return Container(
       margin: EdgeInsets.all(10),
+      height: 60,
       child: Card(
         shadowColor: Colors.white,
         elevation: 2,
