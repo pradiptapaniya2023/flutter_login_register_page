@@ -1,14 +1,8 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_regex/flutter_regex.dart';
 import 'package:login_register_page/welcomepage.dart';
 
 class Signup_Page extends StatefulWidget {
-  String name = "";
-  String email = "";
-  int mobile = 0;
-  String password = "";
-  String reenter = "";
-
   @override
   State<StatefulWidget> createState() {
     return State_Signup_Page();
@@ -21,6 +15,12 @@ class State_Signup_Page extends State<Signup_Page> {
   TextEditingController mobilenoController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
   TextEditingController reenterPasswordController = TextEditingController();
+  bool signinBtnPressedCheck = false;
+  bool nameError = false;
+  bool emailError = false;
+  bool mobilenumberError = false;
+  bool passwordError = false;
+  bool reenterPasswordError = false;
 
   @override
   Widget build(BuildContext context) {
@@ -39,7 +39,7 @@ class State_Signup_Page extends State<Signup_Page> {
                     children: [
                       Container(
                         // margin: EdgeInsets.fromLTRB(left, top, right, bottom),
-                        margin: EdgeInsets.fromLTRB(0, 45, 0, 50),
+                        margin: EdgeInsets.fromLTRB(0, 18, 0, 12),
                         child: Text(
                           'Sign Up',
                           style: TextStyle(
@@ -48,19 +48,61 @@ class State_Signup_Page extends State<Signup_Page> {
                               fontFamily: 'fontsfamily'),
                         ),
                       ),
-                      TextFiledWidget(Icons.person, nameController, 'Name',
-                          TextInputType.name),
-                      TextFiledWidget(Icons.email, emailController, 'Email',
-                          TextInputType.emailAddress),
-                      TextFiledWidget(Icons.call, mobilenoController,
-                          'Mobile Number', TextInputType.number),
-                      TextFiledWidget(Icons.password, passwordController,
-                          'Password', TextInputType.name),
+                      TextFiledWidget(
+                          Icons.person,
+                          nameController,
+                          'Name',
+                          TextInputType.name,
+                          nameError
+                              ? 'Please Enter Vaild name'
+                              : signinBtnPressedCheck == true &&
+                                      nameController.text.isEmpty
+                                  ? 'Please Fill Your name'
+                                  : null),
+                      TextFiledWidget(
+                          Icons.email,
+                          emailController,
+                          'Email',
+                          TextInputType.emailAddress,
+                          emailError
+                              ? 'Please Enter Vaild email'
+                              : signinBtnPressedCheck == true &&
+                                      emailController.text.isEmpty
+                                  ? 'Please Fill Your email'
+                                  : null),
+                      TextFiledWidget(
+                          Icons.call,
+                          mobilenoController,
+                          'Mobile Number',
+                          TextInputType.number,
+                          mobilenumberError
+                              ? 'Please Enter Vaild mobilenumber'
+                              : signinBtnPressedCheck == true &&
+                                      mobilenoController.text.isEmpty
+                                  ? 'Please Fill Your mobilenumber'
+                                  : null),
+                      TextFiledWidget(
+                          Icons.password,
+                          passwordController,
+                          'Password',
+                          TextInputType.name,
+                          passwordError
+                              ? 'Please Enter Vaild password'
+                              : signinBtnPressedCheck == true &&
+                                      passwordController.text.isEmpty
+                                  ? 'Please Fill Your password'
+                                  : null),
                       TextFiledWidget(
                           Icons.remove_red_eye_outlined,
                           reenterPasswordController,
                           'Re-enter Password',
-                          TextInputType.name),
+                          TextInputType.name,
+                          reenterPasswordError
+                              ? ' Please Enter Vaild re-enter password'
+                              : signinBtnPressedCheck == true &&
+                                      reenterPasswordController.text.isEmpty
+                                  ? 'Please Fill Your re-enter password'
+                                  : null),
                       Container(
                         // padding: EdgeInsets.fromLTRB(left, top, right, bottom),
                         padding: EdgeInsets.fromLTRB(217, 0, 0, 0),
@@ -205,10 +247,10 @@ class State_Signup_Page extends State<Signup_Page> {
   }
 
   Widget TextFiledWidget(IconData icon, TextEditingController controller,
-      String s, TextInputType textInputType) {
+      String lblMsg, TextInputType textInputType, String? errorMsg) {
     return Container(
       margin: EdgeInsets.all(10),
-      height: 60,
+      height: errorMsg != null ? 80 : 70,
       child: Card(
         shadowColor: Colors.white,
         elevation: 2,
@@ -217,12 +259,18 @@ class State_Signup_Page extends State<Signup_Page> {
         child: TextField(
           controller: controller,
           style: TextStyle(fontFamily: 'fontsfamily', color: Colors.black),
+          maxLength: 250,
+          maxLines: null,
           decoration: InputDecoration(
+            // counter: Spacer(),
+              counterText: "",
+              errorText: errorMsg,
+              errorStyle: TextStyle(fontFamily: 'fontsfamily'),
               prefixIcon: Icon(icon),
               focusedBorder: InputBorder.none,
               enabledBorder: InputBorder.none,
               hintStyle: TextStyle(fontFamily: 'fontsfamily', fontSize: 17),
-              hintText: s,
+              labelText: lblMsg,
               contentPadding: EdgeInsets.all(10)),
           keyboardType: textInputType,
         ),
@@ -231,20 +279,43 @@ class State_Signup_Page extends State<Signup_Page> {
   }
 
   void signupFun() {
-    widget.name = nameController.text;
-    widget.email = emailController.text;
-    widget.mobile = int.parse(mobilenoController.text);
-    widget.password = passwordController.text;
-    widget.reenter = reenterPasswordController.text;
+    signinBtnPressedCheck = true;
+    nameError = false;
+    emailError = false;
+    mobilenumberError = false;
+    passwordError = false;
+    reenterPasswordError = false;
 
+    final RegExp nameRegex = RegExp('[a-zA-Z]');
+    final RegExp emailRegex = RegExp(
+        r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$');
+    final RegExp mobilenoRegex = RegExp(r'^(?:[+0]9)?[0-9]{10}$');
+    final RegExp passwordRegex =
+        RegExp(r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#\$&*~]).{8,}$');
 
+    if (!nameRegex.hasMatch(nameController.text)) {
+      nameError = true;
+    } else if (!emailRegex.hasMatch(emailController.text)) {
+      emailError = true;
+    } else if (!mobilenoRegex.hasMatch(mobilenoController.text)) {
+      mobilenumberError = true;
+    } else if (!passwordRegex.hasMatch(passwordController.text)) {
+      passwordError = true;
+    } else if (passwordController.text != reenterPasswordController.text) {
+      reenterPasswordError = true;
+    } else if (signinBtnPressedCheck == true &&
+        nameError == false &&
+        emailError == false &&
+        mobilenumberError == false &&
+        passwordError == false &&
+        reenterPasswordError == false) {
+      Navigator.pushReplacement(context, MaterialPageRoute(
+        builder: (context) {
+          return Welcome_Page();
+        },
+      ));
+    }
 
-    Navigator.push(context, MaterialPageRoute(
-      builder: (context) {
-        return Welcome_Page();
-      },
-    ));
-
-
+    setState(() {});
   }
 }
