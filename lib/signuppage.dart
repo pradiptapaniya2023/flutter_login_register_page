@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_regex/flutter_regex.dart';
-import 'package:login_register_page/welcomepage.dart';
+import 'package:login_register_page/db_crud.dart';
+import 'package:sqflite/sqflite.dart';
+import 'loginpage.dart';
 
 class Signup_Page extends StatefulWidget {
+  static Database? db;
+
   @override
   State<StatefulWidget> createState() {
     return State_Signup_Page();
@@ -21,6 +25,25 @@ class State_Signup_Page extends State<Signup_Page> {
   bool mobilenumberError = false;
   bool passwordError = false;
   bool reenterPasswordError = false;
+  // Database? db;
+
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    getData();
+  }
+
+  void getData() {
+    DbCrud().createDatabase().then(
+      (value) {
+        setState(() {
+          Signup_Page.db = value;
+        });
+      },
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -262,7 +285,7 @@ class State_Signup_Page extends State<Signup_Page> {
           maxLength: 250,
           maxLines: null,
           decoration: InputDecoration(
-            // counter: Spacer(),
+              // counter: Spacer(),
               counterText: "",
               errorText: errorMsg,
               errorStyle: TextStyle(fontFamily: 'fontsfamily'),
@@ -309,13 +332,20 @@ class State_Signup_Page extends State<Signup_Page> {
         mobilenumberError == false &&
         passwordError == false &&
         reenterPasswordError == false) {
-      Navigator.pushReplacement(context, MaterialPageRoute(
+      Navigator.push(context, MaterialPageRoute(
         builder: (context) {
-          return Welcome_Page();
+          return Login_Page();
         },
       ));
     }
 
     setState(() {});
+
+    DbCrud().insertDatabase(
+        nameController.text,
+        emailController.text,
+        mobilenoController.text,
+        passwordController.text,
+        reenterPasswordController.text );
   }
 }
