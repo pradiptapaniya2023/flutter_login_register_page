@@ -28,22 +28,7 @@ class State_Signup_Page extends State<Signup_Page> {
   // Database? db;
 
 
-  @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
-    getData();
-  }
 
-  void getData() {
-    DbCrud().createDatabase().then(
-      (value) {
-        setState(() {
-          Signup_Page.db = value;
-        });
-      },
-    );
-  }
 
   @override
   Widget build(BuildContext context) {

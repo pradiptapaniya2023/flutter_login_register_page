@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:login_register_page/db_crud.dart';
 import 'package:login_register_page/signuppage.dart';
+import 'package:login_register_page/welcomepage.dart';
 
 class Login_Page extends StatefulWidget {
   @override
@@ -9,11 +11,28 @@ class Login_Page extends StatefulWidget {
 }
 
 class State_Login_Page extends State<Login_Page> {
+  TextEditingController emailController = TextEditingController();
+  TextEditingController passwordController = TextEditingController();
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    getData();
+  }
+
+  void getData() {
+    DbCrud().createDatabase().then(
+      (value) {
+        setState(() {
+          Signup_Page.db = value;
+        });
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
-    TextEditingController emailController = TextEditingController();
-    TextEditingController passwordController = TextEditingController();
-
     return Scaffold(
       body: Container(
           decoration: BoxDecoration(
@@ -66,7 +85,9 @@ class State_Login_Page extends State<Login_Page> {
                           shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(20)),
                           child: TextButton(
-                            onPressed: () {},
+                            onPressed: () {
+                              loginFun();
+                            },
                             child: Text(
                               'Log in',
                               style: TextStyle(
@@ -232,5 +253,25 @@ class State_Login_Page extends State<Login_Page> {
         ),
       ),
     );
+  }
+
+  Future<void> loginFun() async {
+    List<Map> list = await DbCrud()
+        .selectDatabase(emailController.text, passwordController.text);
+
+    if (list.isEmpty) {
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text("User Not Found")));
+    } else {
+      Map username = list[0];
+      print(
+          'userdata in login page ==> ${username['EMAIL']} & ${username['PASSWORD']}');
+
+      Navigator.pushReplacement(context, MaterialPageRoute(
+        builder: (context) {
+          return Welcomepage();
+        },
+      ));
+    }
   }
 }

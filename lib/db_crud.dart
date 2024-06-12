@@ -32,4 +32,13 @@ class DbCrud {
 
     print("==insert database = ${cnt}");
   }
+
+  Future<List<Map>> selectDatabase(String email, String password) async {
+    List<Map> list = await Signup_Page.db!.rawQuery(
+        "SELECT * FROM SIGNUPDATA WHERE EMAIL = '${email}' AND PASSWORD = '${password}'");
+
+    print("print list in DBcrud = ${list}");
+
+    return list;
+  }
 }
