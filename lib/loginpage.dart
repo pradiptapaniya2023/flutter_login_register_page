@@ -2,8 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:login_register_page/db_crud.dart';
 import 'package:login_register_page/signuppage.dart';
 import 'package:login_register_page/welcomepage.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class Login_Page extends StatefulWidget {
+  static SharedPreferences? sp;
+
   @override
   State<StatefulWidget> createState() {
     return State_Login_Page();
@@ -256,6 +259,7 @@ class State_Login_Page extends State<Login_Page> {
   }
 
   Future<void> loginFun() async {
+    print("===in login funciton");
     List<Map> list = await DbCrud()
         .selectDatabase(emailController.text, passwordController.text);
 
@@ -263,9 +267,19 @@ class State_Login_Page extends State<Login_Page> {
       ScaffoldMessenger.of(context)
           .showSnackBar(SnackBar(content: Text("User Not Found")));
     } else {
-      Map username = list[0];
+
+      Login_Page.sp!.setString('loginEmail', list[0]['EMAIL']);
+      Login_Page.sp!.setString('loginPassword', list[0]['PASSWORD']);
+      Login_Page.sp!.setBool('loginCheck', true);
+
       print(
-          'userdata in login page ==> ${username['EMAIL']} & ${username['PASSWORD']}');
+          '= loginpage = check email or password ==> ${list[0]['EMAIL']} & ${list[0]['PASSWORD']}');
+      //
+      // String loginemail = Login_Page.sp!.getString('loginEmail') ?? "";
+      // String loginpassword = Login_Page.sp!.getString('loginPassword') ?? "";
+      //
+      // print("= loginpage = getSP ${loginemail}");
+      // print("= loginpage = getSP ${loginpassword}");
 
       Navigator.pushReplacement(context, MaterialPageRoute(
         builder: (context) {

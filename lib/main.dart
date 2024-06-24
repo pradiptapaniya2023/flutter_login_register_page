@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'loginpage.dart';
+import 'package:login_register_page/splechscreen.dart';
 
 void main() {
   runApp(MaterialApp(
-    home: Login_Page(),
+    home: SplachScreen(),
   ));
 }

@@ -23,26 +23,47 @@ class _WelcomepageState extends State<Welcomepage> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Center(
-              child: TextButton(
-                  onPressed: () {
-                    Navigator.pushReplacement(context, MaterialPageRoute(
-                      builder: (context) {
-                        return Login_Page();
-                      },
-                    ));
+                child: Text(
+              'Welcome',
+              style: TextStyle(
+                  fontSize: 60,
+                  color: Colors.black,
+                  fontWeight: FontWeight.bold,
+                  fontFamily: "fontsfamily"),
+            )),
+            Padding(
+              padding: const EdgeInsets.only(top: 70),
+              child: Container(
+                height: 35,
+                width: 120,
+                decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(10),
+                    border: Border.all(color: Colors.black)),
+                child: InkWell(
+                  onTap: () {
+                    dltRecord();
                   },
                   child: Text(
-                    'Welcome',
+                    textAlign: TextAlign.center,
+                    "LOG OUT",
                     style: TextStyle(
-                        fontSize: 60,
-                        color: Colors.black,
+                        fontSize: 20,
                         fontWeight: FontWeight.bold,
-                        fontFamily: "fontsfamily"),
-                  )),
+                        fontFamily: 'fontsfamily'),
+                  ),
+                ),
+              ),
             )
           ],
         ),
       ),
     );
+  }
+
+  dltRecord() {
+
+
+
+
   }
 }

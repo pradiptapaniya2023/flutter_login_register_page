@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_regex/flutter_regex.dart';
 import 'package:login_register_page/db_crud.dart';
 import 'package:sqflite/sqflite.dart';
 import 'loginpage.dart';
@@ -25,10 +24,8 @@ class State_Signup_Page extends State<Signup_Page> {
   bool mobilenumberError = false;
   bool passwordError = false;
   bool reenterPasswordError = false;
+
   // Database? db;
-
-
-
 
   @override
   Widget build(BuildContext context) {
@@ -324,13 +321,32 @@ class State_Signup_Page extends State<Signup_Page> {
       ));
     }
 
+    DbCrud()
+        .insertDatabase(
+            nameController.text,
+            emailController.text,
+            mobilenoController.text,
+            passwordController.text,
+            reenterPasswordController.text,
+            context)
+        .then(
+      (value) {
+        if (value) {
+          {
+            ScaffoldMessenger.of(context)
+                .showSnackBar(SnackBar(content: Text("User registrer")));
+            Navigator.push(context, MaterialPageRoute(
+              builder: (context) {
+                return Login_Page();
+              },
+            ));
+          }
+        } else {
+          ScaffoldMessenger.of(context)
+              .showSnackBar(SnackBar(content: Text("User Already Exist!")));
+        }
+      },
+    );
     setState(() {});
-
-    DbCrud().insertDatabase(
-        nameController.text,
-        emailController.text,
-        mobilenoController.text,
-        passwordController.text,
-        reenterPasswordController.text );
   }
 }

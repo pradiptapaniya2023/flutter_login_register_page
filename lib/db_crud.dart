@@ -1,3 +1,5 @@
+import 'package:flutter/material.dart';
+import 'package:flutter/src/widgets/framework.dart';
 import 'package:login_register_page/signuppage.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
@@ -18,19 +20,30 @@ class DbCrud {
     return database;
   }
 
-  Future<void> insertDatabase(
+  Future<bool> insertDatabase(
     String name,
     String email,
     String mobilenumber,
     String password,
     String reenterpassword,
+    BuildContext context,
   ) async {
-    String insertqry =
-        "INSERT INTO SIGNUPDATA (NAME,EMAIL,MOBILENUMBER,PASSWORD,REENTERPASSWORD) VALUES ('$name' , '$email' , '$mobilenumber' , '$password' , '$reenterpassword')";
+    List<Map> list = await Signup_Page.db!
+        .rawQuery("SELECT * FROM SIGNUPDATA WHERE EMAIL = '${email}'");
 
-    int cnt = await Signup_Page.db!.rawInsert(insertqry);
+    if (list.length == 0) {
+      String insertqry =
+          "INSERT INTO SIGNUPDATA (NAME,EMAIL,MOBILENUMBER,PASSWORD,REENTERPASSWORD) VALUES ('$name' , '$email' , '$mobilenumber' , '$password' , '$reenterpassword')";
 
-    print("==insert database = ${cnt}");
+      int cnt = await Signup_Page.db!.rawInsert(insertqry);
+
+      print("==insert database = ${cnt}");
+      return true;
+    } else {
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text("User Already Exist!")));
+      return false;
+    }
   }
 
   Future<List<Map>> selectDatabase(String email, String password) async {
