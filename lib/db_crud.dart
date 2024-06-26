@@ -14,7 +14,9 @@ class DbCrud {
       version: 1,
       onCreate: (Database db, int version) async {
         await db.execute(
-            'CREATE TABLE SIGNUPDATA (ID integer primary key autoincrement , NAME text , EMAIL text , MOBILENUMBER integer , PASSWORD text , REENTERPASSWORD text)');
+          'CREATE TABLE SIGNUPDATA (ID integer primary key autoincrement , NAME text , EMAIL text , MOBILENUMBER integer , PASSWORD text , REENTERPASSWORD text)',
+        );
+
       },
     );
     return database;
@@ -54,4 +56,6 @@ class DbCrud {
 
     return list;
   }
+
+  void deleteRowDatabase() {}
 }
