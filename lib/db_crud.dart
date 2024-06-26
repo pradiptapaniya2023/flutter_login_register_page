@@ -17,9 +17,17 @@ class DbCrud {
           'CREATE TABLE SIGNUPDATA (ID integer primary key autoincrement , NAME text , EMAIL text , MOBILENUMBER integer , PASSWORD text , REENTERPASSWORD text)',
         );
 
+        await db.execute(
+          'CREATE TABLE CONTACTDATA (ID integer primary key autoincrement , NAME text , MOBILENUMBER integer )',
+        );
       },
     );
     return database;
+  }
+
+  insertContactDatabase(String name, String mobilenumber) {
+    Signup_Page.db!.rawInsert(
+        "INSERT INTO CONTACTDATA (NAME , MOBILENUMBER) VALUES ('$name' , '$mobilenumber')");
   }
 
   Future<bool> insertDatabase(
@@ -56,6 +64,4 @@ class DbCrud {
 
     return list;
   }
-
-  void deleteRowDatabase() {}
 }
