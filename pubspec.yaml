@@ -39,6 +39,7 @@ dependencies:
   sqflite: ^2.3.3+1
   shared_preferences: ^2.2.3
   lottie: ^3.1.2
+  pull_down_button: ^0.9.4
 
 dev_dependencies:
   flutter_test:

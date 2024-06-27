@@ -18,23 +18,6 @@ class State_Login_Page extends State<Login_Page> {
   TextEditingController passwordController = TextEditingController();
 
   @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
-    getData();
-  }
-
-  void getData() {
-    DbCrud().createDatabase().then(
-      (value) {
-        setState(() {
-          Signup_Page.db = value;
-        });
-      },
-    );
-  }
-
-  @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(

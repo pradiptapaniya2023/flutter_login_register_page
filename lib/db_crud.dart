@@ -14,11 +14,11 @@ class DbCrud {
       version: 1,
       onCreate: (Database db, int version) async {
         await db.execute(
-          'CREATE TABLE SIGNUPDATA (ID integer primary key autoincrement , NAME text , EMAIL text , MOBILENUMBER integer , PASSWORD text , REENTERPASSWORD text)',
+          'CREATE TABLE SIGNUPDATA (ID integer primary key autoincrement , NAME text , EMAIL text , MOBILENUMBER text , PASSWORD text , REENTERPASSWORD text)',
         );
 
         await db.execute(
-          'CREATE TABLE CONTACTDATA (ID integer primary key autoincrement , NAME text , MOBILENUMBER integer )',
+          'CREATE TABLE CONTACTDATA (ID integer primary key autoincrement , NAME text , MOBILENUMBER text )',
         );
       },
     );
@@ -63,5 +63,19 @@ class DbCrud {
     print("print list in DBcrud = ${list}");
 
     return list;
+  }
+
+  Future<List<Map>> getAllContacts() async {
+    List<Map> list =
+        await Signup_Page.db!.rawQuery("SELECT * FROM CONTACTDATA");
+
+    print("All Contact===> $list");
+
+    return list;
+  }
+
+  void updateContacts(String name, String mobilenumber, int index) {
+    Signup_Page.db!.rawUpdate(
+        "UPDATE CONTACTDATA SET NAME = '$name' ,  MOBILENUMBER = '$mobilenumber' WHERE ID = '${index}' ");
   }
 }

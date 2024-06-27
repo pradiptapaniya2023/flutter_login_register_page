@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:login_register_page/db_crud.dart';
+import 'package:pull_down_button/pull_down_button.dart';
 import 'loginpage.dart';
 
 class Welcomepage extends StatefulWidget {
@@ -15,7 +16,18 @@ class _WelcomepageState extends State<Welcomepage> {
   bool nameError = false;
   bool mobilernumberError = false;
   bool addBtnPressedCheck = false;
-  List<Map<String, String>> contact = [];
+  List<Map> contact = [];
+
+  @override
+  void initState() {
+    fetchData();
+    super.initState();
+  }
+
+  Future<void> fetchData() async {
+    contact = await DbCrud().getAllContacts();
+    setState(() {});
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -59,21 +71,25 @@ class _WelcomepageState extends State<Welcomepage> {
                 child: ListView.builder(
                   itemCount: contact.length,
                   itemBuilder: (context, index) {
-                    return Container(
-                      height: 100,
-                      width: 150,
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(10),
-                          color: Colors.white),
-                      child: Card(
-                        elevation: 5,
-                        shadowColor: Colors.white,
-                        child: Column(
-                          children: [
-                            Container(
-                              margin: EdgeInsets.all(8),
+                    return InkWell(
+                      onTap: () {
+                        print("== tapped listview${index}");
+
+                        DbCrud().updateContacts(nameController.text,
+                            mobilenumberController.text, index);
+                      },
+                      child: Container(
+                          margin: EdgeInsets.all(5),
+                          height: 100,
+                          width: 150,
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(10),
+                              color: Colors.blue[200]),
+                          child: ListTile(
+                            title: Padding(
+                              padding: const EdgeInsets.only(top: 5, left: 5),
                               child: Text(
-                                "${contact[index]['name']}",
+                                "${contact[index]['NAME']}",
                                 style: TextStyle(
                                     fontFamily: 'fontsfamily',
                                     fontSize: 20,
@@ -81,20 +97,18 @@ class _WelcomepageState extends State<Welcomepage> {
                                     color: Colors.black),
                               ),
                             ),
-                            Container(
-                              margin: EdgeInsets.all(8),
+                            subtitle: Padding(
+                              padding: const EdgeInsets.only(top: 5, left: 5),
                               child: Text(
-                                "${contact[index]['mobilenumber']}",
+                                "${contact[index]['MOBILENUMBER']}",
                                 style: TextStyle(
                                     fontFamily: 'fontsfamily',
                                     fontSize: 20,
                                     fontWeight: FontWeight.bold,
-                                    color: Colors.grey),
+                                    color: Colors.black54),
                               ),
                             ),
-                          ],
-                        ),
-                      ),
+                          )),
                     );
                   },
                 ),
@@ -144,7 +158,8 @@ class _WelcomepageState extends State<Welcomepage> {
                       padding:
                           const EdgeInsets.only(top: 100, left: 10, right: 10),
                       child: Container(
-                        height: nameError != null ? 80 : 70,
+                        height:
+                            nameError || mobilernumberError != null ? 80 : 70,
                         child: Card(
                           shadowColor: Colors.white,
                           elevation: 2,
@@ -160,10 +175,7 @@ class _WelcomepageState extends State<Welcomepage> {
                             decoration: InputDecoration(
                                 errorText: nameError
                                     ? 'Please Enter Vaild name'
-                                    : addBtnPressedCheck &&
-                                            nameController.text.isEmpty
-                                        ? 'Please Fill Your name'
-                                        : null,
+                                    : null,
                                 counterText: "",
                                 errorStyle:
                                     TextStyle(fontFamily: 'fontsfamily'),
@@ -198,10 +210,7 @@ class _WelcomepageState extends State<Welcomepage> {
                             decoration: InputDecoration(
                                 errorText: mobilernumberError
                                     ? 'Please Enter Vaild mobilenumber'
-                                    : addBtnPressedCheck &&
-                                            nameController.text.isEmpty
-                                        ? 'Please Fill Your mobilenumber'
-                                        : null,
+                                    : null,
                                 counterText: "",
                                 errorStyle:
                                     TextStyle(fontFamily: 'fontsfamily'),
@@ -267,19 +276,15 @@ class _WelcomepageState extends State<Welcomepage> {
     } else if (!mobilenoRegex.hasMatch(mobilenumberController.text)) {
       mobilernumberError = true;
     } else {
-      contact.add({
-        'name': nameController.text,
-        'mobilenumber': mobilenumberController.text
-      });
+      DbCrud().insertContactDatabase(
+          nameController.text, mobilenumberController.text);
+
+      nameController.text = "";
+      mobilenumberController.text = "";
+
+      Navigator.pop(context);
+      fetchData();
     }
-
-    DbCrud().insertContactDatabase(
-        nameController.text, mobilenumberController.text);
-
-    nameController.text = "";
-    mobilenumberController.text = "";
-
-    Navigator.pop(context);
 
     setState(() {});
   }
