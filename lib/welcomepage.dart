@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:login_register_page/db_crud.dart';
-import 'package:pull_down_button/pull_down_button.dart';
 import 'loginpage.dart';
 
 class Welcomepage extends StatefulWidget {
@@ -13,6 +12,8 @@ class Welcomepage extends StatefulWidget {
 class _WelcomepageState extends State<Welcomepage> {
   TextEditingController nameController = TextEditingController();
   TextEditingController mobilenumberController = TextEditingController();
+  TextEditingController editNameController = TextEditingController();
+  TextEditingController editMobileumberController = TextEditingController();
   bool nameError = false;
   bool mobilernumberError = false;
   bool addBtnPressedCheck = false;
@@ -71,44 +72,66 @@ class _WelcomepageState extends State<Welcomepage> {
                 child: ListView.builder(
                   itemCount: contact.length,
                   itemBuilder: (context, index) {
-                    return InkWell(
-                      onTap: () {
-                        print("== tapped listview${index}");
-
-                        DbCrud().updateContacts(nameController.text,
-                            mobilenumberController.text, index);
-                      },
-                      child: Container(
-                          margin: EdgeInsets.all(5),
-                          height: 100,
-                          width: 150,
-                          decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(10),
-                              color: Colors.blue[200]),
-                          child: ListTile(
-                            title: Padding(
-                              padding: const EdgeInsets.only(top: 5, left: 5),
-                              child: Text(
-                                "${contact[index]['NAME']}",
-                                style: TextStyle(
-                                    fontFamily: 'fontsfamily',
-                                    fontSize: 20,
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.black),
+                    return Container(
+                      margin: EdgeInsets.all(5),
+                      height: 100,
+                      width: 150,
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(10),
+                          color: Colors.blue[200]),
+                      child: ListTile(
+                        title: Padding(
+                          padding: const EdgeInsets.only(top: 5, left: 5),
+                          child: Text(
+                            "${contact[index]['NAME']}",
+                            style: TextStyle(
+                                fontFamily: 'fontsfamily',
+                                fontSize: 20,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.black),
+                          ),
+                        ),
+                        subtitle: Padding(
+                          padding: const EdgeInsets.only(top: 5, left: 5),
+                          child: Text(
+                            "${contact[index]['MOBILENUMBER']}",
+                            style: TextStyle(
+                                fontFamily: 'fontsfamily',
+                                fontSize: 20,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.black54),
+                          ),
+                        ),
+                        trailing: PopupMenuButton<String>(
+                          onSelected: (value) {
+                            if (value == 'edit') {
+                              editShowDialog(index);
+                            } else if (value == 'delete') {}
+                          },
+                          itemBuilder: (BuildContext context) {
+                            return [
+                              PopupMenuItem(
+                                child: Text(
+                                  "Edit",
+                                  style: TextStyle(
+                                      fontFamily: 'fontsfamily',
+                                      fontWeight: FontWeight.bold),
+                                ),
+                                value: 'edit',
                               ),
-                            ),
-                            subtitle: Padding(
-                              padding: const EdgeInsets.only(top: 5, left: 5),
-                              child: Text(
-                                "${contact[index]['MOBILENUMBER']}",
-                                style: TextStyle(
-                                    fontFamily: 'fontsfamily',
-                                    fontSize: 20,
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.black54),
+                              PopupMenuItem(
+                                child: Text(
+                                  "Delete",
+                                  style: TextStyle(
+                                      fontFamily: 'fontsfamily',
+                                      fontWeight: FontWeight.bold),
+                                ),
+                                value: 'delete',
                               ),
-                            ),
-                          )),
+                            ];
+                          },
+                        ),
+                      ),
                     );
                   },
                 ),
@@ -119,7 +142,7 @@ class _WelcomepageState extends State<Welcomepage> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          openShowDialog();
+          addShowDialog();
         },
         child: Icon(
           Icons.add,
@@ -139,7 +162,7 @@ class _WelcomepageState extends State<Welcomepage> {
     setState(() {});
   }
 
-  openShowDialog() {
+  addShowDialog() {
     showDialog(
       context: context,
       builder: (context) {
@@ -246,7 +269,7 @@ class _WelcomepageState extends State<Welcomepage> {
                                     fontWeight: FontWeight.bold,
                                     fontFamily: "fontsfamily",
                                     color: Colors.black45,
-                                    fontSize: 27),
+                                    fontSize: 25),
                               ),
                             ),
                           ),
@@ -287,5 +310,123 @@ class _WelcomepageState extends State<Welcomepage> {
     }
 
     setState(() {});
+  }
+
+  editShowDialog(int index) {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return Padding(
+          padding: const EdgeInsets.fromLTRB(20, 210, 20, 210),
+          child: Expanded(
+            child: SingleChildScrollView(
+              child: Container(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(10),
+                  color: Colors.white,
+                ),
+                child: Column(
+                  children: [
+                    Padding(
+                      padding:
+                          const EdgeInsets.only(top: 100, left: 10, right: 10),
+                      child: Container(
+                        height: 70,
+                        child: Card(
+                          shadowColor: Colors.white,
+                          elevation: 2,
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10)),
+                          color: Colors.white,
+                          child: TextField(
+                            controller: editNameController,
+                            style: TextStyle(
+                                fontFamily: 'fontsfamily', color: Colors.black),
+                            decoration: InputDecoration(
+                                prefixIcon: Icon(Icons.person),
+                                focusedBorder: InputBorder.none,
+                                enabledBorder: InputBorder.none,
+                                hintStyle: TextStyle(
+                                    fontFamily: 'fontsfamily', fontSize: 17),
+                                labelText: "Enter Your Name",
+                                contentPadding: EdgeInsets.all(10)),
+                            keyboardType: TextInputType.name,
+                          ),
+                        ),
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(left: 10, right: 10),
+                      child: Container(
+                        height: 70,
+                        child: Card(
+                          shadowColor: Colors.white,
+                          elevation: 2,
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10)),
+                          color: Colors.white,
+                          child: TextField(
+                            controller: editMobileumberController,
+                            style: TextStyle(
+                                fontFamily: 'fontsfamily', color: Colors.black),
+                            decoration: InputDecoration(
+                                prefixIcon: Icon(Icons.call),
+                                focusedBorder: InputBorder.none,
+                                enabledBorder: InputBorder.none,
+                                hintStyle: TextStyle(
+                                    fontFamily: 'fontsfamily', fontSize: 17),
+                                labelText: "Enter Your Mobilenumber",
+                                contentPadding: EdgeInsets.all(10)),
+                            keyboardType: TextInputType.number,
+                          ),
+                        ),
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(top: 20, bottom: 100),
+                      child: Container(
+                        height: 60,
+                        width: 70,
+                        child: Card(
+                          color: Colors.white,
+                          elevation: 5,
+                          shadowColor: Colors.white,
+                          child: Center(
+                            child: TextButton(
+                              onPressed: () {
+                                setState(() {
+                                  DbCrud().updateContacts(
+                                      editNameController.text,
+                                      editMobileumberController.text,
+                                      index);
+
+                                  editNameController.text = "";
+                                  editMobileumberController.text = "";
+                                });
+
+                                Navigator.pop(context);
+                                fetchData();
+                              },
+                              child: Text(
+                                "Ok",
+                                style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontFamily: "fontsfamily",
+                                    color: Colors.black45,
+                                    fontSize: 20),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    )
+                  ],
+                ),
+              ),
+            ),
+          ),
+        );
+      },
+    );
   }
 }
