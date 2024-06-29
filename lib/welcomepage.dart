@@ -106,7 +106,9 @@ class _WelcomepageState extends State<Welcomepage> {
                           onSelected: (value) {
                             if (value == 'edit') {
                               editShowDialog(index);
-                            } else if (value == 'delete') {}
+                            } else if (value == 'delete') {
+                              deleteContact(index);
+                            }
                           },
                           itemBuilder: (BuildContext context) {
                             return [
@@ -313,6 +315,9 @@ class _WelcomepageState extends State<Welcomepage> {
   }
 
   editShowDialog(int index) {
+    editNameController.text = '${contact[index]['NAME']}';
+    editMobileumberController.text = '${contact[index]['MOBILENUMBER']}';
+
     showDialog(
       context: context,
       builder: (context) {
@@ -394,18 +399,20 @@ class _WelcomepageState extends State<Welcomepage> {
                           child: Center(
                             child: TextButton(
                               onPressed: () {
+                                print("==${contact[index]}");
+
                                 setState(() {
                                   DbCrud().updateContacts(
                                       editNameController.text,
                                       editMobileumberController.text,
-                                      index);
+                                      contact[index]['ID']);
 
                                   editNameController.text = "";
                                   editMobileumberController.text = "";
                                 });
 
-                                Navigator.pop(context);
                                 fetchData();
+                                Navigator.pop(context);
                               },
                               child: Text(
                                 "Ok",
@@ -428,5 +435,11 @@ class _WelcomepageState extends State<Welcomepage> {
         );
       },
     );
+  }
+
+  deleteContact(int index) {
+    DbCrud().deleteContacts(contact[index]['ID']);
+    fetchData();
+    setState(() {});
   }
 }

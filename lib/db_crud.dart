@@ -74,8 +74,14 @@ class DbCrud {
     return list;
   }
 
-  void updateContacts(String name, String mobilenumber, int index) {
+  void updateContacts(String name, String mobilenumber, int id) {
     Signup_Page.db!.rawUpdate(
-        "UPDATE CONTACTDATA SET NAME = '$name' ,  MOBILENUMBER = '$mobilenumber' WHERE ID = '${index}' ");
+        "UPDATE CONTACTDATA SET NAME = ? ,  MOBILENUMBER = ? WHERE ID = ? ",
+        ['$name', '$mobilenumber', '${id}']);
+  }
+
+  void deleteContacts(int id) {
+    Signup_Page.db!
+        .rawDelete("DELETE FROM CONTACTDATA WHERE ID = ? ", ['${id}']);
   }
 }
