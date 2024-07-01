@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:login_register_page/db_crud.dart';
+
 import 'loginpage.dart';
 
 class Welcomepage extends StatefulWidget {
@@ -18,46 +19,115 @@ class _WelcomepageState extends State<Welcomepage> {
   bool mobilernumberError = false;
   bool addBtnPressedCheck = false;
   List<Map> contact = [];
+  List<Map> SearchList = [];
+  bool Issearch = false;
 
   @override
   void initState() {
-    fetchData();
     super.initState();
+    fetchData();
   }
 
   Future<void> fetchData() async {
     contact = await DbCrud().getAllContacts();
+    SearchList = contact;
     setState(() {});
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text(
-          "Welcome",
-          style: TextStyle(
-              fontSize: 30,
-              color: Colors.black,
-              fontWeight: FontWeight.bold,
-              fontFamily: "fontsfamily"),
-        ),
-        actions: [
-          Padding(
-            padding: const EdgeInsets.only(right: 12),
-            child: IconButton(
-              icon: Icon(
-                Icons.login_outlined,
-                color: Colors.black,
-                size: 23,
+      appBar: Issearch
+          ? AppBar(
+              title: TextField(
+                decoration: InputDecoration(
+                    border: OutlineInputBorder(),
+                    prefixIcon: IconButton(
+                        onPressed: () {
+                          setState(() {
+                            SearchList = contact;
+                            Issearch = false;
+                          });
+                        },
+                        icon: Icon(Icons.arrow_back))),
+                autofocus: true,
+                onChanged: (value) {
+                  setState(() {
+                    if (value.isNotEmpty) {
+                      print("===GG");
+                      SearchList = [];
+                      for (int i = 0; i < contact.length; i++) {
+                        String name = contact[i]['NAME'];
+                        String mobilenumber = contact[i]['MOBILENUMBER'];
+                        if (name.toLowerCase().contains(value.toLowerCase())) {
+                          setState(() {
+                            SearchList.add(contact[i]);
+
+                            print("Search==$SearchList");
+                          });
+                        } else if (mobilenumber.contains(value)) {
+                          setState(() {
+                            SearchList.add(contact[i]);
+                          });
+                        }
+                      }
+                    } else {
+                      print("===DD");
+                      SearchList = contact;
+
+                      print("==$SearchList");
+                    }
+                  });
+                },
               ),
-              onPressed: () {
-                checkLogout();
-              },
+              actions: [
+                Padding(
+                  padding: const EdgeInsets.only(right: 12),
+                  child: IconButton(
+                    icon: Icon(
+                      Icons.login_outlined,
+                      color: Colors.black,
+                      size: 23,
+                    ),
+                    onPressed: () {
+                      checkLogout();
+                    },
+                  ),
+                )
+              ],
+            )
+          : AppBar(
+              title: Text(
+                "Welcome",
+                style: TextStyle(
+                    fontSize: 30,
+                    color: Colors.black,
+                    fontWeight: FontWeight.bold,
+                    fontFamily: "fontsfamily"),
+              ),
+              actions: [
+                IconButton(
+                    onPressed: () {
+                      setState(() {
+                        Issearch = true;
+                      });
+                    },
+                    icon: Icon(Icons.search)),
+                Padding(
+                  padding: const EdgeInsets.only(right: 12),
+                  child: IconButton(
+                    icon: Icon(
+                      Icons.login_outlined,
+                      color: Colors.black,
+                      size: 23,
+                    ),
+                    onPressed: () {
+                      checkLogout();
+                    },
+                  ),
+                )
+              ],
             ),
-          )
-        ],
-      ),
       body: Container(
         decoration: BoxDecoration(
             image: DecorationImage(
@@ -70,8 +140,10 @@ class _WelcomepageState extends State<Welcomepage> {
               child: Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: ListView.builder(
-                  itemCount: contact.length,
+                  itemCount: Issearch ? SearchList.length : contact.length,
                   itemBuilder: (context, index) {
+                    Map map = Issearch ? SearchList[index] : contact[index];
+                    // setState(() {});
                     return Container(
                       margin: EdgeInsets.all(5),
                       height: 100,
@@ -83,7 +155,7 @@ class _WelcomepageState extends State<Welcomepage> {
                         title: Padding(
                           padding: const EdgeInsets.only(top: 5, left: 5),
                           child: Text(
-                            "${contact[index]['NAME']}",
+                            "${map['NAME']}",
                             style: TextStyle(
                                 fontFamily: 'fontsfamily',
                                 fontSize: 20,
@@ -94,7 +166,7 @@ class _WelcomepageState extends State<Welcomepage> {
                         subtitle: Padding(
                           padding: const EdgeInsets.only(top: 5, left: 5),
                           child: Text(
-                            "${contact[index]['MOBILENUMBER']}",
+                            "${map['MOBILENUMBER']}",
                             style: TextStyle(
                                 fontFamily: 'fontsfamily',
                                 fontSize: 20,
